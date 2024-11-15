@@ -70,7 +70,7 @@ namespace Mitarbeiterverwaltung
             MitarbeiterDB.DataSource = getMitarbeiterTable().Tables[0];
             MitarbeiterDB.Columns[0].Visible = false;
         }
-
+//!!!Geschlecht divers wird als männlich abgespeichert
 //------Mitarbeiter einpflegen:
         private void btnSaveMitarbeiter_Click(object sender, EventArgs e)
         {
@@ -79,15 +79,15 @@ namespace Mitarbeiterverwaltung
             int geschlecht = 0;
             if (geschlechtDropdown.SelectedIndex == 0) 
             {
-                geschlecht = 0;
+                geschlecht = 1;
             }
             else if(geschlechtDropdown.SelectedIndex == 1)
             {
-                geschlecht = 1;
+                geschlecht = 2;
             }
             else 
             {
-                geschlecht = 2;
+                geschlecht = 3;
             }
 
             if(vornameInput.Text != "" && nachnameInput.Text != "" && geschlechtDropdown.SelectedIndex >= 0)
@@ -133,26 +133,25 @@ namespace Mitarbeiterverwaltung
             string vorname = vornameInput.Text;
             string nachname = nachnameInput.Text;
             int geschlecht = 0;
+
             if (geschlechtDropdown.SelectedIndex == 0)
-            {
-                geschlecht = 0;
-            }
-            else if (geschlechtDropdown.SelectedIndex == 1)
             {
                 geschlecht = 1;
             }
-            else
+            else if (geschlechtDropdown.SelectedIndex == 1)
             {
                 geschlecht = 2;
             }
+            else
+            {
+                geschlecht = 3;
+            }
 
-            if (vornameInput.Text != "" && nachnameInput.Text != "" && geschlechtDropdown.SelectedIndex >= 0)
+            if (vorname != "" && nachname != "" && geschlechtDropdown.SelectedIndex >= 0)
             {
                 databaseConnection.Open();
                 string query = string.Format("UPDATE Mitarbeiter SET Vorname = '{0}', Nachname = '{1}', ID_Geschlecht = '{2}' WHERE ID_Mitarbeiter = '{3}'", vorname, nachname, geschlecht, id);
-
-                //string.Format->damit die Werte übergeben werden können
-                string query2 = string.Format("insert into Mitarbeiter(Vorname, Nachname, ID_Geschlecht) values ('{0}', '{1}', '{2}')", vorname, nachname, geschlecht);
+               
                 SqlCommand cmd = new SqlCommand(query, databaseConnection);
                 cmd.ExecuteNonQuery();
                 databaseConnection.Close();
@@ -161,13 +160,23 @@ namespace Mitarbeiterverwaltung
             showMitarbeiter();
         }
 
-        //------Mitarbeiter löschen
+//------Mitarbeiter löschen
         private void btnDeleteMitarbeiter_Click(object sender, EventArgs e)
         {
             int id = Convert.ToInt32(MitarbeiterDB.SelectedRows[0].Cells[0].Value);
+
             if (id>0)
             {
-                
+                databaseConnection.Open();
+
+                string query = string.Format("Delete from Mitarbeiter WHERE ID_Mitarbeiter = '{0}' ", id);
+                SqlCommand cmd = new SqlCommand(query, databaseConnection);
+                cmd.ExecuteNonQuery();
+                databaseConnection.Close();
+            }
+            else
+            {
+                MessageBox.Show("Die ID ist ungültig.");
             }
 
             showMitarbeiter();

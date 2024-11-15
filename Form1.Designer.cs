@@ -61,6 +61,7 @@
             this.MitarbeiterDB.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.MitarbeiterDB.Size = new System.Drawing.Size(1107, 367);
             this.MitarbeiterDB.TabIndex = 0;
+            this.MitarbeiterDB.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MitarbeiterDB_CellContentClick);
             this.MitarbeiterDB.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MitarbeiterDB_CellContentClick);
             // 
             // vornameInput
@@ -75,7 +76,7 @@
             this.vornameLabel.AutoSize = true;
             this.vornameLabel.Location = new System.Drawing.Point(46, 26);
             this.vornameLabel.Name = "vornameLabel";
-            this.vornameLabel.Size = new System.Drawing.Size(57, 15);
+            this.vornameLabel.Size = new System.Drawing.Size(49, 13);
             this.vornameLabel.TabIndex = 2;
             this.vornameLabel.Text = "Vorname";
             // 
@@ -84,7 +85,7 @@
             this.nachnameLabel.AutoSize = true;
             this.nachnameLabel.Location = new System.Drawing.Point(50, 58);
             this.nachnameLabel.Name = "nachnameLabel";
-            this.nachnameLabel.Size = new System.Drawing.Size(68, 15);
+            this.nachnameLabel.Size = new System.Drawing.Size(59, 13);
             this.nachnameLabel.TabIndex = 3;
             this.nachnameLabel.Text = "Nachname";
             // 
@@ -108,7 +109,7 @@
             this.geschlechtLabel.AutoSize = true;
             this.geschlechtLabel.Location = new System.Drawing.Point(50, 94);
             this.geschlechtLabel.Name = "geschlechtLabel";
-            this.geschlechtLabel.Size = new System.Drawing.Size(68, 15);
+            this.geschlechtLabel.Size = new System.Drawing.Size(61, 13);
             this.geschlechtLabel.TabIndex = 6;
             this.geschlechtLabel.Text = "Geschlecht";
             // 
