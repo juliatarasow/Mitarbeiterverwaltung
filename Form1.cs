@@ -46,8 +46,7 @@ namespace Mitarbeiterverwaltung
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            showMitarbeiter();
-            //MitarbeiterDB.SelectionChanged += MitarbeiterDB_SelectionChanged;
+            showMitarbeiter();            
         }
 
         private DataSet getMitarbeiterTable()
@@ -69,8 +68,8 @@ namespace Mitarbeiterverwaltung
         {
             //Zugriff auf DataGridView; die Tabelle, die auf der nullten Stelle steht (es können auch mehrere Tabellen sein)
             MitarbeiterDB.DataSource = getMitarbeiterTable().Tables[0];
+            MitarbeiterDB.Columns[0].Visible = false;
         }
-
 
 //------Mitarbeiter einpflegen:
         private void btnSaveMitarbeiter_Click(object sender, EventArgs e)
@@ -106,7 +105,6 @@ namespace Mitarbeiterverwaltung
             
         }
 
-
 //------Inputfelder leeren
         private void clearInput()
         {
@@ -120,8 +118,7 @@ namespace Mitarbeiterverwaltung
             clearInput();
         }
 
-
-//------Mitarbeiter bearbeiten
+//------Mitarbeiter auswählen
         private void MitarbeiterDB_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             vornameInput.Text = MitarbeiterDB.SelectedRows[0].Cells[1].Value.ToString();
@@ -129,59 +126,52 @@ namespace Mitarbeiterverwaltung
             geschlechtDropdown.Text = MitarbeiterDB.SelectedRows[0].Cells[3].Value.ToString();
         }
 
-        //private void MitarbeiterDB_SelectionChanged(object sender, EventArgs e)
-        //{
-        //    //nachnameInput.Text = MitarbeiterDB.SelectedCells[1].Value.ToString();
-        //    vornameInput.Text = MitarbeiterDB.SelectedRows[0].Cells[1].Value.ToString();
-        //    nachnameInput.Text = MitarbeiterDB.SelectedRows[0].Cells[2].Value.ToString();
-        //   // geschlechtDropdown.SelectedIndex = MitarbeiterDB.SelectedRows[0];               
-        //}
-        
+//------Mitarbeiter bearbeiten
+        private void btnChangeMitarbeiter_Click(object sender, EventArgs e)
+        {
+            int id = Convert.ToInt32(MitarbeiterDB.SelectedRows[0].Cells[0].Value);
+            string vorname = vornameInput.Text;
+            string nachname = nachnameInput.Text;
+            int geschlecht = 0;
+            if (geschlechtDropdown.SelectedIndex == 0)
+            {
+                geschlecht = 0;
+            }
+            else if (geschlechtDropdown.SelectedIndex == 1)
+            {
+                geschlecht = 1;
+            }
+            else
+            {
+                geschlecht = 2;
+            }
+
+            if (vornameInput.Text != "" && nachnameInput.Text != "" && geschlechtDropdown.SelectedIndex >= 0)
+            {
+                databaseConnection.Open();
+                string query = string.Format("UPDATE Mitarbeiter SET Vorname = '{0}', Nachname = '{1}', ID_Geschlecht = '{2}' WHERE ID_Mitarbeiter = '{3}'", vorname, nachname, geschlecht, id);
+
+                //string.Format->damit die Werte übergeben werden können
+                string query2 = string.Format("insert into Mitarbeiter(Vorname, Nachname, ID_Geschlecht) values ('{0}', '{1}', '{2}')", vorname, nachname, geschlecht);
+                SqlCommand cmd = new SqlCommand(query, databaseConnection);
+                cmd.ExecuteNonQuery();
+                databaseConnection.Close();
+            }
+
+            showMitarbeiter();
+        }
 
         //------Mitarbeiter löschen
         private void btnDeleteMitarbeiter_Click(object sender, EventArgs e)
         {
-            if (MitarbeiterDB.SelectedRows.Count > 0)
+            int id = Convert.ToInt32(MitarbeiterDB.SelectedRows[0].Cells[0].Value);
+            if (id>0)
             {
-                int mitarbeiterID =  Convert.ToInt32(MitarbeiterDB.SelectedRows[0].Cells["ID_Mitarbeiter"].Value);
-
-                var confirmResult = MessageBox.Show("Sind Sie sicher, dass Sie diesen Mitarbeiter löschen möchten?");
-
-                if(confirmResult == DialogResult.Yes)
-                {
-                    databaseConnection.Open();
-
-                    string query = "DELETE FROM Mitarbeiter WHERE ID_Mitarbeiter = @ID_Mitarbeiter";
-                    SqlCommand cmd = new SqlCommand(query, databaseConnection);
-                    cmd.Parameters.AddWithValue("@ID_Mitaerbeiter", mitarbeiterID);
-
-                    cmd.ExecuteNonQuery();
-                    showMitarbeiter();
-                }
-                else
-                {
-                    MessageBox.Show("Bitte wählen Sie einen Mitarbeiter aus, um ihn zu löschen.");
-                }
+                
             }
+
+            showMitarbeiter();
+            clearInput();
         }
-
-       
-
-        //private void Form1_Load(object sender, EventArgs e)
-        //{
-        //    databaseConnection.Open();
-        //    string query =  "SELECT M.Vorname, M.Nachname, G.Geschlecht_lang FROM Mitarbeiter M inner join Geschlecht G ON G.ID_Geschlecht = M.ID_Geschlecht";
-
-        //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, databaseConnection);
-
-
-        //    DataSet dataSet = new DataSet();
-        //    sqlDataAdapter.Fill(dataSet);
-
-        //    //Zugriff auf DataGridView; die Tabelle, die auf der nullten Stelle steht (es können auch mehrere Tabellen sein)
-        //    MitarbeiterDB.DataSource = dataSet.Tables[0];
-
-        //    databaseConnection.Close();
-        //}
     }
 }

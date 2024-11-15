@@ -98,10 +98,6 @@
             // geschlechtDropdown
             // 
             this.geschlechtDropdown.FormattingEnabled = true;
-            this.geschlechtDropdown.Items.AddRange(new object[] {
-            "weiblich",
-            "männlich",
-            "divers"});
             this.geschlechtDropdown.Location = new System.Drawing.Point(132, 94);
             this.geschlechtDropdown.Name = "geschlechtDropdown";
             this.geschlechtDropdown.Size = new System.Drawing.Size(225, 21);
@@ -134,6 +130,7 @@
             this.btnChangeMitarbeiter.TabIndex = 8;
             this.btnChangeMitarbeiter.Text = "bearbeiten";
             this.btnChangeMitarbeiter.UseVisualStyleBackColor = true;
+            this.btnChangeMitarbeiter.Click += new System.EventHandler(this.btnChangeMitarbeiter_Click);
             // 
             // btnDeleteMitarbeiter
             // 
